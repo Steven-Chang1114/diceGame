@@ -30,8 +30,30 @@ document.querySelector(".btn-roll").addEventListener("click", function(){
     diceDOM.src = "dice-"+dice+".png";
 
     if (dice != 1){
-        document.querySelector("#current-" + currentPlayer).textContent = dice;
+        currentScore += dice;
+        document.querySelector("#current-" + currentPlayer).textContent = currentScore;
     }else{
-        document.querySelector("#current-" + currentPlayer).textContent = 0;
+        //scores[currentPlayer] += currentScore;
+        //document.querySelector("#score-"+currentPlayer).textContent = scores[currentPlayer];
+    
+        switchPlayer();
     }
 });
+
+
+document.querySelector(".btn-hold").addEventListener("click", function(){
+    scores[currentPlayer] += currentScore;
+    document.getElementById("score-"+ currentPlayer).textContent = scores[currentPlayer];
+
+    switchPlayer();
+
+});
+
+function switchPlayer() {
+    currentScore = 0;
+    document.querySelector("#current-" + currentPlayer).textContent = currentScore;
+    currentPlayer == 0 ? currentPlayer = 1 : currentPlayer = 0;
+    document.querySelector(".player-0-panel").classList.toggle("active");
+    document.querySelector(".player-1-panel").classList.toggle("active");
+    document.querySelector(".dice").style.display = "none";
+}
