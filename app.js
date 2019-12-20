@@ -9,45 +9,71 @@ GAME RULES:
 
 */
 
-var scores, currentScore, currentPlayer;
+var scores, currentScore, currentPlayer, gameScope;
 
-scores = [0,0];
-currentScore = 0;
-currentPlayer = 0;
-
-document.querySelector(".dice").style.display = "none";
-
-document.getElementById("score-0").textContent = 0;
-document.getElementById("score-1").textContent = 0;
-document.getElementById("current-0").textContent = 0;
-document.getElementById("current-1").textContent = 0;
+init();
 
 document.querySelector(".btn-roll").addEventListener("click", function(){
-    var dice = Math.floor(Math.random() * 6) + 1;
+    if (gameScope){
+        var dice = Math.floor(Math.random() * 6) + 1;
 
-    var diceDOM = document.querySelector(".dice");
-    diceDOM.style.display = "block";
-    diceDOM.src = "dice-"+dice+".png";
+        var diceDOM = document.querySelector(".dice");
+        diceDOM.style.display = "block";
+        diceDOM.src = "dice-"+dice+".png";
 
-    if (dice != 1){
-        currentScore += dice;
-        document.querySelector("#current-" + currentPlayer).textContent = currentScore;
-    }else{
-        //scores[currentPlayer] += currentScore;
-        //document.querySelector("#score-"+currentPlayer).textContent = scores[currentPlayer];
-    
-        switchPlayer();
-    }
+        if (dice != 1){
+            currentScore += dice;
+            document.querySelector("#current-" + currentPlayer).textContent = currentScore;
+        }else{
+            //scores[currentPlayer] += currentScore;
+            //document.querySelector("#score-"+currentPlayer).textContent = scores[currentPlayer];
+        
+            switchPlayer();
+        }
+    } 
 });
 
 
 document.querySelector(".btn-hold").addEventListener("click", function(){
-    scores[currentPlayer] += currentScore;
-    document.getElementById("score-"+ currentPlayer).textContent = scores[currentPlayer];
+    if (gameScope){
+        scores[currentPlayer] += currentScore;
+        document.getElementById("score-"+ currentPlayer).textContent = scores[currentPlayer];
 
-    switchPlayer();
-
+        if (scores[currentPlayer] >= 10) {
+            document.getElementById("name-" + currentPlayer).textContent = "WINNER";
+            document.querySelector(".dice").style.display = "none";
+            document.querySelector(".player-" + currentPlayer + "-panel").classList.add("winner");
+            document.querySelector(".player-" + currentPlayer + "-panel").classList.remove("active");
+            currentScore = 0;
+            gameScope = false;
+        }else{
+            switchPlayer();
+        }
+    }
 });
+
+document.querySelector(".btn-new").addEventListener("click", init);
+
+function init(){
+    gameScope = true;
+    scores = [0,0];
+    currentScore = 0;
+    currentPlayer = 0;
+
+    document.querySelector(".dice").style.display = "none";
+
+    document.getElementById("score-0").textContent = 0;
+    document.getElementById("score-1").textContent = 0;
+    document.getElementById("current-0").textContent = 0;
+    document.getElementById("current-1").textContent = 0;
+    document.getElementById("name-0").textContent = "Player 1";
+    document.getElementById("name-1").textContent = "Player 2";
+    document.querySelector(".player-0-panel").classList.remove("winner");
+    document.querySelector(".player-1-panel").classList.remove("winner");
+    document.querySelector(".player-0-panel").classList.remove("active");
+    document.querySelector(".player-0-panel").classList.add("active");
+    document.querySelector(".player-1-panel").classList.remove("active");
+}
 
 function switchPlayer() {
     currentScore = 0;
